@@ -1,0 +1,63 @@
+version: "3"
+
+services:
+    postgres:
+        image: debezium/postgres
+        ports:
+            - 5000:5432
+        environment:
+            - POSTGRES_PASSWORD=example
+            - POSTGRES_DB=postgres
+            - POSTGRES_USER=postgres
+        volumes:
+            - ${PWD}/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
+        networks: 
+            - network
+
+    zookeeper:
+        image: debezium/zookeeper
+        ports:
+            - 2181:2181
+            - 2888:2888
+            - 3888:3888
+        networks: 
+            - network
+    
+    kafka:
+        image: debezium/kafka
+        ports:
+            - 9092:9092
+        environment:
+            - ZOOKEEPER_CONNECT=zookeeper:2181
+        networks: 
+            - network
+        
+    connect:
+        image: debezium/connect
+        ports:
+            - 8083:8083
+        environment: 
+            - GROUP_ID=1
+            - CONFIG_STORAGE_TOPIC=my-connect-configs
+            - OFFSET_STORAGE_TOPIC=my-connect-offsets
+            - STATUS_STORAGE_TOPIC=my-connect-statuses
+            - BOOTSTRAP_SERVERS=kafka:9092
+        networks: 
+            - network
+
+    watcher:
+        image: debezium/kafka
+        command: watch-topic -a -k dbserver1.public.books
+        environment:
+            - ZOOKEEPER_CONNECT=zookeeper:2181
+            - KAFKA_BROKER=kafka:9092
+        networks:
+            - network
+        depends_on:
+            - zookeeper
+            - kafka
+            - connect
+
+    
+networks:
+    network:
