@@ -7,7 +7,7 @@ resource "aws_security_group_rule" "postgres" {
   from_port         = 5432
   to_port           = 5432
   protocol          = "tcp"
-  cidr_blocks       = ["0.0.0.0/0"]
+  cidr_blocks       = ["0.0.0.0/0", ]
   security_group_id = aws_security_group.default_sg.id
 }
 
@@ -29,9 +29,8 @@ resource "aws_security_group_rule" "egress_all" {
   security_group_id = aws_security_group.default_sg.id
 }
 
-
-resource "aws_db_instance" "db_source" {
-  identifier             = "mysql-db-source"
+resource "aws_db_instance" "db_target" {
+  identifier             = "mysql-db-target"
   allocated_storage      = 10
   engine                 = "mysql"
   engine_version         = "8.0"
@@ -40,10 +39,30 @@ resource "aws_db_instance" "db_source" {
   username               = var.db_username_mysql
   password               = var.db_password_mysql
   vpc_security_group_ids = [aws_security_group.default_sg.id]
+  skip_final_snapshot    = true
+  publicly_accessible = true # UNSAFE Only for non production !!
 }
 
-resource "aws_db_instance" "db_target" {
-  identifier             = "postgres-db-target"
+resource "aws_db_parameter_group" "pg_replication_params" {
+  name   = "cdc"
+  family = "postgres12"
+
+  parameter {
+    name  = "wal_sender_timeout"
+    value = "0"
+    apply_method = "pending-reboot"
+  }
+
+  parameter {
+    name  = "rds.logical_replication"
+    value = "1"
+    apply_method = "pending-reboot"
+  }
+  
+}
+
+resource "aws_db_instance" "db_source" {
+  identifier             = "postgres-db-source"
   allocated_storage      = 10
   engine                 = "postgres"
   instance_class         = "db.t3.micro"
@@ -51,4 +70,9 @@ resource "aws_db_instance" "db_target" {
   username               = var.db_username_postgres
   password               = var.db_password_postgres
   vpc_security_group_ids = [aws_security_group.default_sg.id]
+  skip_final_snapshot    = true
+  publicly_accessible    = true # UNSAFE Only for non production !!
+  parameter_group_name   = aws_db_parameter_group.pg_replication_params.name
 }
+
+

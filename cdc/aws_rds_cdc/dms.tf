@@ -12,9 +12,9 @@ resource "aws_dms_replication_instance" "dms_instance" {
 
 resource "aws_dms_endpoint" "dms_endpoint_source" {
   database_name = aws_db_instance.db_source.name
-  endpoint_id   = "source-mysql"
+  endpoint_id   = "source-pg"
   endpoint_type = "source"
-  engine_name   = "mysql"
+  engine_name   = "postgres"
   password      = aws_db_instance.db_source.password
   port          = aws_db_instance.db_source.port
   server_name   = aws_db_instance.db_source.address
@@ -23,9 +23,9 @@ resource "aws_dms_endpoint" "dms_endpoint_source" {
 
 resource "aws_dms_endpoint" "dms_endpoint_target" {
   database_name = aws_db_instance.db_target.name
-  endpoint_id   = "target-postgres"
+  endpoint_id   = "target-mysql"
   endpoint_type = "target"
-  engine_name   = "postgres"
+  engine_name   = "mysql"
   password      = aws_db_instance.db_target.password
   port          = aws_db_instance.db_target.port
   server_name   = aws_db_instance.db_target.address
