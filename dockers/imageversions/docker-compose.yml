@@ -1,0 +1,11 @@
+version: "3"
+
+services:
+    python-normal:
+        image: python:3.9
+    
+    python-slim:
+        image: python:3.9-slim
+
+    python-alpine:
+        image: python:3.9-alpine

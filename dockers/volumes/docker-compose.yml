@@ -1,0 +1,14 @@
+version: "3"
+
+services:
+    busybox:
+        image: busybox
+        volumes:
+            - ./dir1:/dir1
+            - ./dir2:/dir2:ro
+            - dir3:/dir3
+        tmpfs:
+            - /dir_tmpfs
+volumes:
+    dir3:
+        driver: local
