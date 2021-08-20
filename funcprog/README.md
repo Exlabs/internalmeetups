@@ -40,7 +40,7 @@ you can't anticipate the order of results coming back
 what uses it already:
 - react
 - redux
-`const` is default
+
 `const` does not mean we cannot mutate internals!, freezing is hacking
 
 ## IoT
@@ -84,11 +84,16 @@ https://www.freecodecamp.org/news/how-and-why-to-use-functional-programming-in-m
 
 interesting discussion on 
 https://stackoverflow.com/questions/36504/why-functional-languages
+
 https://towardsdatascience.com/why-developers-are-falling-in-love-with-functional-programming-13514df4048e
+
 https://docs.python.org/3.9/howto/functional.html
+
 https://medium.com/javascript-scene/master-the-javascript-interview-what-is-functional-programming-7f218c68b3a0
 
 https://isaaccomputerscience.org/concepts/data_big_func
+
 https://towardsdatascience.com/the-ultimate-guide-to-functional-programming-for-big-data-1e57b0d225a3
+
 https://medium.com/@jorgeehrhardt123/why-you-should-learn-functional-programming-for-big-data-a85bd429bf49
 

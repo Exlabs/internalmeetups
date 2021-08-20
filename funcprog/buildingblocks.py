@@ -13,12 +13,9 @@ def get_user_impure(user_id):
     db.get_user(user_id)
     notify_subscribers('user_found')
 
-def get_user_pure(user_id):
+def get_user_pure(user_id, db):
     db.get_user(user_id)
-    notify_subscribers('user_found')    
 
-def controller_get_user(id):
-    get_user_impure(id)
 
 
 # function composition
